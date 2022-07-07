@@ -39,7 +39,7 @@ class TransactionsController {
     const userId = data.user._id; 
 
     const account = await Account.findOne({ userId }).exec();
-    const balance = amount + account.balance;
+    const balance = parseInt(amount) + parseInt(account.balance);
     Account.findOneAndUpdate({ userId , balance })
       .exec()
       .then(() => {
@@ -155,7 +155,7 @@ class TransactionsController {
     res.status(200).json({
       transactions: transactions,
       status: 200,
-      balance: account.balance
+      account
     }) 
   }
 

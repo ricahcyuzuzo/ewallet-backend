@@ -6,7 +6,7 @@ import User from '../models/users.model';
 
 class Authentication {
   static signup (req, res) {
-    const { names, phone, password,type } = req.body;
+    const { names, phone, password, type } = req.body;
     const { error } = validateUserSignup(createUser(req));
     if(error){
       return res.status(400).json({

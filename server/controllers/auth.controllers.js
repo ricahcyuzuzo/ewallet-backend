@@ -72,6 +72,8 @@ class Authentication {
             status: 201,
             message: 'Logged in successful',
             token: generateToken(doc),
+            names: doc.names,
+            id: doc._id
           });
         }else{
           res.status(401).json({

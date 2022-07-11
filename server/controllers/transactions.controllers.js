@@ -88,15 +88,15 @@ class TransactionsController {
     const payeeId = product.userId;
     const payeeAccount = await Account.findOne({ userId: payeeId }).exec();
     
-    if(account.balance < product.price){
+    if(parseInt(account.balance) < parseInt(product.price)){
       return res.status(400).json({
         status: 400,
         message: 'Oops, You have unsufficient funds on your account'
       })
     }
 
-    const amountToPay = payeeAccount.balance + product.price;
-    const amountToDeduct = account.balance - product.price;
+    const amountToPay = parseInt(payeeAccount.balance) + parseInt(product.price);
+    const amountToDeduct = parseInt(account.balance) - parseInt(product.price);
 
      Account.findOneAndUpdate({ userId: payeeId }, { balance: amountToPay })
       .exec()
@@ -105,7 +105,7 @@ class TransactionsController {
           .then(() => {
             const transaction = new Transaction({
               _id: new Mongoose.Types.ObjectId(),
-              amount: amountToPay,
+              amount: product.price,
               createdAt: new Date().toDateString(),
               fromId: userId,
               toId: payeeId,
@@ -144,39 +144,39 @@ class TransactionsController {
         });
       })
 
-  } 
+  }
 
   static async getTransactions (req, res) {
     const data = jwtDecode(req.headers.authorization);
     const userId = data.user._id;
-    
+
     const account = await Account.findOne({ userId }).exec();
     const transactions = await Transaction.find({ fromId: userId, toId: userId }).exec();
     res.status(200).json({
       transactions: transactions,
       status: 200,
       account
-    }) 
+    })
   }
 
   static async sendMoney (req, res) {
     const data = jwtDecode(req.headers.authorization);
     const userId = data.user._id;
     const { receiver_id } = req.query;
-    const { amountToSend } = req.body; 
+    const { amountToSend } = req.body;
 
     const account = await Account.findOne({ userId }).exec();
     const receiverAccount = await Account.findOne({ userId: receiver_id }).exec();
-    
-    if(account.balance < amountToSend){
+
+    if(parseInt(account.balance) < parseInt(amountToSend)){
       return res.status(400).json({
         status: 400,
         message: 'Oops, You have unsufficient funds on your account'
       })
     }
 
-    const amountReceived = receiverAccount.balance + amountToSend;
-    const amountToDeduce = account.balance - amountToSend; 
+    const amountReceived = parseInt(receiverAccount.balance) + parseInt(amountToSend);
+    const amountToDeduce = parseInt(account.balance) - parseInt(amountToSend);
 
     Account.findOneAndUpdate({ userId: receiver_id }, { balance: amountReceived })
     .exec()
@@ -184,7 +184,7 @@ class TransactionsController {
       Account.findOneAndUpdate({ userId }, { balance: amountToDeduce })
       .exec()
       .then(async () => {
-        const user = await User.findOne({ _id: receiver_id }).exec(); 
+        const user = await User.findOne({ _id: receiver_id }).exec();
         const transaction = new Transaction({
           _id: new Mongoose.Types.ObjectId(),
           amount: amountToSend,

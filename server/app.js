@@ -10,6 +10,8 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json({ type: '*/*'}));
 
+const port = process.env.PORT || 3000;
+
 
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
@@ -39,7 +41,7 @@ app.use((req, res) => {
   });
 });
 
-app.listen(3000,() => console.log('App is listening on port 3000'));
+app.listen(port ,() => console.log('App is listening on port 3000'));
 mongoConnect();
 
 export default app;

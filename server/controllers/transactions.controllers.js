@@ -113,9 +113,11 @@ class TransactionsController {
               action: `Paying ${product.name} at ${product.price}`
             });
 
+
             transaction
               .save()
-              .then(() => {
+              .then((res) => {
+                console.log(res, 'Hihihih');
                 res.status(201).json({
                   message: 'You have paid successful the ' + product.name + ' at ' + product.price + ' RWF, Your remaining balance is ' + amountToDeduct + ' RWF',
                   status: 201, 
@@ -143,7 +145,6 @@ class TransactionsController {
           error: err
         });
       })
-
   }
 
   static async getTransactions (req, res) {
@@ -151,7 +152,7 @@ class TransactionsController {
     const userId = data.user._id;
 
     const account = await Account.findOne({ userId }).exec();
-    const transactions = await Transaction.find({ fromId: userId, toId: userId }).exec();
+    const transactions = await Transaction.find({}).exec();
     res.status(200).json({
       transactions: transactions,
       status: 200,
@@ -191,8 +192,9 @@ class TransactionsController {
           createdAt: new Date().toDateString(),
           fromId: userId,
           toId: receiver_id,
+          toName: user.names,
           status: 'Outgoing',
-          action: `Sending ${amountToSend} RWF to ${user.name}`,
+          action: `Sending ${amountToSend} RWF to ${user.names}`,
         });
 
         transaction

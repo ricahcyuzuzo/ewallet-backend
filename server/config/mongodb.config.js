@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const mongoConnect = () => {
-  mongoose.connect('mongodb://localhost:27017/dall', {
+  mongoose.connect('mongodb+srv://umhuda8:kigali123@cluster0.msb3g.mongodb.net/?retryWrites=true&w=majority', {
     useUnifiedTopology: true,
     useNewUrlParser: true
   });

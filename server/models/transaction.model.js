@@ -7,6 +7,7 @@ const transactionSchema = mongoose.Schema({
   fromId: String,
   toId: String,
   toName: String,
+  fromName: String,
   status: String,
   action: String,
 });

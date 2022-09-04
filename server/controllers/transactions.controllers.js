@@ -193,6 +193,7 @@ class TransactionsController {
           fromId: userId,
           toId: receiver_id,
           toName: user.names,
+          fromName: data.user.names,
           status: 'Outgoing',
           action: `Sending ${amountToSend} RWF to ${user.names}`,
         });
